@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<script src="./data/topic1.js"></script>
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>En</title>
+  <style>
+    #animation {
+      margin-bottom: 20px;
+    }
+
+    body {
+      background-color: #f5f5f5;
+      font-family: Arial, sans-serif;
+    }
+
+    #container {
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 20px;
+      background-color: #fff;
+      border-radius: 5px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+
+    h1 {
+      color: #333;
+      margin-bottom: 30px;
+    }
+
+    #word-definition {
+      text-align: center;
+      margin-top: 40px;
+    }
+
+    #answer-input {
+      width: 100%;
+      margin-bottom: 20px;
+      padding: 10px;
+      font-size: 16px;
+      border: none;
+      border-radius: 4px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+
+
+    .correct-animation {
+      color: green;
+    }
+
+    .incorrect-animation {
+      color: red;
+    }
+
+    #button-container {
+      display: flex;
+      justify-content: space-between;
+    }
+
+    #submit-btn,
+    #next-btn {
+      padding: 10px 20px;
+      font-size: 16px;
+      background-color: #333;
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    #submit-btn:hover,
+    #next-btn:hover {
+      background-color: #555;
+    }
+
+    #user-input {
+      width: 80%;
+      margin-top: 20px;
+      padding: 10px;
+      font-size: 16px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+
+    #word-container {
+      text-align: center;
+      margin-top: 40px;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="container">
+    <h1></h1>
+    <div id="word-container">
+      <h2 id="word"></h2>
+      <p id="definition"></p>
+      <input type="text" id="user-input" placeholder="Type the word here">
+      <div id="animation"></div>
+      <button id="submit-btn">Submit</button>
+      <button id="next-btn">Next</button>
+    </div>
+    <div id="result-container">
+      <p id="result"></p>
+    </div>
+  </div>
+  <script>
+    const wordDefinitions = data;
+    let currentWordIndex = 0;
+
+    // Display the definition of the current word
+    function displayDefinition() {
+      const definitionElement = document.getElementById("definition");
+      definitionElement.textContent = `Definition: ${wordDefinitions[currentWordIndex].definition}`;
+    }
+
+    // Check the user's answer and display the animation accordingly
+    function checkAnswer() {
+      const answerInput = document.getElementById("user-input");
+      const animationElement = document.getElementById("animation");
+      const correctAnswer = wordDefinitions[currentWordIndex].word;
+
+      if (answerInput.value.toLowerCase() === correctAnswer) {
+        animationElement.textContent = "Correct!";
+        animationElement.className = "correct-animation";
+      } else {
+        animationElement.textContent = `Incorrect. The correct word is "${correctAnswer}".`;
+        animationElement.className = "incorrect-animation";
+      }
+
+      animationElement.classList.remove("hidden");
+    }
+
+    // Move to the next question
+    function nextQuestion() {
+      const answerInput = document.getElementById("user-input");
+      const animationElement = document.getElementById("animation");
+
+      currentWordIndex++;
+      answerInput.value = "";
+      animationElement.classList.add("hidden");
+
+      if (currentWordIndex < wordDefinitions.length) {
+        displayDefinition();
+      } else {
+        // All questions answered, show completion message or redirect to another page
+        alert("Congratulations! You have completed all the questions.");
+      }
+    }
+
+    // Event listeners
+    document.addEventListener("DOMContentLoaded", displayDefinition);
+    document.getElementById("submit-btn").addEventListener("click", checkAnswer);
+    document.getElementById("next-btn").addEventListener("click", nextQuestion);
+    document.getElementById("user-input").addEventListener("keydown", function (event) {
+      if (event.key === "Enter") {
+        checkAnswer();
+      }
+    });
+  </script>
+</body>
+
+</html>

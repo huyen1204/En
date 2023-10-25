@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<script src="./data/topic1.js"></script>
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>English Flashcards</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f8f8f8;
+    }
+
+    .flashcard-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .flashcard {
+      width: 80%;
+      padding: 10px 20px;
+      text-align: center;
+      height: 200px;
+      background-color: #fff;
+      border-radius: 10px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+      position: relative;
+      transition: transform 0.3s ease-in-out;
+    }
+
+    .flashcard:hover {
+      transform: scale(1.05);
+    }
+
+    .flashcard .content {
+      display: none;
+      text-align: center;
+    }
+
+    .flashcard.flipped .content {
+      display: block;
+    }
+
+    .next-button {
+      display: block;
+      width: 100px;
+      height: 40px;
+      background-color: #4CAF50;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      font-size: 16px;
+      margin-top: 20px;
+      cursor: pointer;
+      transition: background-color 0.3s ease-in-out;
+    }
+
+    .next-button:hover {
+      background-color: #45a049;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="flashcard-container">
+    <div class="flashcard" onclick="flipCard()">
+      <div class="front" style="white-space: pre-line;">
+        <h6>Click next!</h6>
+      </div>
+      <div class="back" style="white-space: pre-line;">
+        <h4>Click next!</h4>
+      </div>
+    </div>
+  </div>
+  <button class="next-button" onclick="nextCard()">Next</button>
+  <script>
+    var flashcards = data;
+
+    const flashcard = document.querySelector('.flashcard');
+    const frontContent = document.querySelector('.front');
+    const backContent = document.querySelector('.back');
+    let isFlipped = false;
+    var currentCardIndex = 0;
+
+    function updateFlashcard() {
+      var currentCard = flashcards[currentCardIndex];
+      frontContent.textContent = `(${currentCard.type}) \n` + currentCard.word;
+      backContent.textContent = `(${currentCard.type})\n ` + currentCard.definition;
+      frontContent.style.display = 'block';
+      backContent.style.display = 'none';
+    }
+
+    function flipCard() {
+      flashcard.classList.toggle('flipped');
+      isFlipped = !isFlipped;
+      if (isFlipped) {
+        frontContent.style.display = 'none';
+        console.log(frontContent);
+        backContent.style.display = 'block';
+      } else {
+        frontContent.style.display = 'block';
+        backContent.style.display = 'none';
+      }
+    }
+
+    function nextCard() {
+      flashcard.classList.remove('flipped');
+      isFlipped = false;
+      currentCardIndex++;
+      if (currentCardIndex >= flashcards.length) {
+        alert("Congratulations! You have completed all the flashcash.");
+      }
+      updateFlashcard();
+    }
+  </script>
+</body>
+
+</html>
