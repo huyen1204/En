@@ -72,7 +72,7 @@
 <body>
   <div class="flashcard-container">
     <div class="flashcard" onclick="flipCard()">
-      <h3 class="front" style="white-space: pre-line;"></h3>
+      <h4 class="front" style="white-space: pre-line;"></h4>
       <div class="back" style="white-space: pre-line;"></div>
     </div>
     <button class="next-button" onclick="nextCard()">Next</button>
@@ -112,8 +112,17 @@
 
     function updateFlashcard() {
       var currentCard = flashcards[currentCardIndex];
-      frontContent.textContent = `(${currentCard.type}) \n` + currentCard.word;
-      backContent.textContent = `(${currentCard.type})\n ` + currentCard.definition;
+      frontContent.textContent = "";
+      backContent.textContent = "";
+      if (currentCard.type) {
+        frontContent.textContent += `(${currentCard.type})\n`;
+        backContent.textContent += `(${currentCard.type})\n`;
+      }
+      if (currentCard.pronunciation) {
+        frontContent.textContent += `${currentCard.pronunciation}\n`;
+      }
+      frontContent.textContent += `${currentCard.word}`;
+      backContent.textContent += currentCard.definition;
       frontContent.style.display = 'block';
       backContent.style.display = 'none';
     }
