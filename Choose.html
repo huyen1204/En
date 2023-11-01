@@ -70,11 +70,20 @@
     .result {
       text-align: center;
       margin-top: 20px;
+      padding-left: 50px;
+      padding-right: 50px;
     }
 
     .correct-definition {
       color: #4CAF50;
       font-weight: bold;
+      width: 60%;
+    }
+
+    .incorrect-definition {
+      color: #ff000d;
+      font-weight: bold;
+      width: 60%;
     }
   </style>
 </head>
@@ -90,27 +99,40 @@
       <button class="option" onclick="checkAnswer(2)">Definition 3</button>
       <button class="option" onclick="checkAnswer(3)">Definition 4</button>
     </div>
-    <button class="next-button" onclick="nextQuestion()">Next</button>
     <div class="result">
       <p id="result"></p>
     </div>
+    <button class="next-button" onclick="nextQuestion()">Next</button>
   </div>
-  <script>
-    // Define the word list with their definitions
-    const words = [
-      {
-        word: "Example",
-        definitions: [
-          "A thing characteristic of its kind or illustrating a general rule.",
-          "A pattern or model.",
-          "A person or thing regarded in terms of their fitness to be imitated or the likelihood of their being imitated.",
-          "A person or thing regarded in terms of their fitness to be imitated or the likelihood of their being imitated."
-        ],
-        correctDefinitionIndex: 0
-      },
-      // Add more words here...
-    ];
+  <script src="Helper.js"></script>
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.5.2/firebase-app.js";
+    import { getDatabase, ref, onValue} from "https://www.gstatic.com/firebasejs/10.5.2/firebase-database.js";
 
+    const firebaseConfig = {
+      apiKey: "AIzaSyDUdYpPR3EkVZ_JTip0tQ-bL19O7LUhOAs",
+      authDomain: "words-59aaa.firebaseapp.com",
+      databaseURL: "https://words-59aaa-default-rtdb.asia-southeast1.firebasedatabase.app",
+      projectId: "words-59aaa",
+      storageBucket: "words-59aaa.appspot.com",
+      messagingSenderId: "95469708600",
+      appId: "1:95469708600:web:3234040cf68d598fdecdcd",
+      measurementId: "G-DRPDSH7CGP"
+    };
+
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const database = getDatabase(app);
+    const topic = GetURLParameter('topic');
+    const starCountRef = ref(database, `/${topic}`);
+    var words = [];
+    onValue(starCountRef, (snapshot) => {
+      var dbwords = snapshot.val();
+      dbwords = shuffle(dbwords);
+      console.log(dbwords);
+      words = convert(dbwords);
+      displayQuestion();
+    });
     let currentQuestion = 0;
     let correctAnswers = 0;
 
@@ -127,7 +149,7 @@
     }
 
     // Function to check the user's answer
-    function checkAnswer(selectedIndex) {
+    window.checkAnswer = function checkAnswer(selectedIndex) {
       const resultElement = document.getElementById("result");
 
       if (selectedIndex === words[currentQuestion].correctDefinitionIndex) {
@@ -135,8 +157,9 @@
           "<span class='correct-definition'>Correct!</span>";
         correctAnswers++;
       } else {
+        words.push(words[currentQuestion]);
         resultElement.innerHTML =
-          "Incorrect. The correct definition is: <span class='correct-definition'>" +
+          "<span class='incorrect-definition'>" +
           words[currentQuestion].definitions[
           words[currentQuestion].correctDefinitionIndex
           ] +
@@ -145,10 +168,8 @@
     }
 
     // Function to move to the next question
-    function nextQuestion() {
-      const resultElement = document.getElementById("result");
-
-      resultElement.textContent = "";
+    window.nextQuestion = function nextQuestion() {
+      const resultElement = document.getElementById("result");      resultElement.textContent = "";
 
       currentQuestion++;
 
@@ -160,13 +181,11 @@
           "/" +
           words.length
         );
+        window.location.href = `Options.html?topic=${topic}`;
       } else {
         displayQuestion();
       }
-    }
-
-    // Initial question display
-    displayQuestion();
+    }    
   </script>
 </body>
 
