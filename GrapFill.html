@@ -170,8 +170,7 @@
         animationElement.className = "correct-animation";
       } else {
         wordDefinitions.push(wordDefinitions[currentWordIndex]);
-        animationElement.innerHTML = 
-        animationElement.textContent = `"<span class='incorrect-animation'>${correctAnswer}</span>" is the correct word.`;
+        animationElement.innerHTML = `"<span class='incorrect-animation'>${correctAnswer}</span>" is the correct word.`;
       }
       animationElement.hidden = false;
     }
