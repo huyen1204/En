@@ -1,15 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
 
-<script src="./data/topic1.js"></script>
-
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>En</title>
   <style>
     #animation {
-      margin-bottom: 20px;
+      margin-top: 5px;
     }
 
     body {
@@ -50,10 +48,12 @@
 
     .correct-animation {
       color: green;
+      font-weight: bold;
     }
 
     .incorrect-animation {
       color: red;
+      font-weight: bold;
     }
 
     #button-container {
@@ -61,7 +61,6 @@
       justify-content: space-between;
     }
 
-    #submit-btn,
     #next-btn {
       padding: 10px 20px;
       font-size: 16px;
@@ -71,6 +70,19 @@
       border-radius: 4px;
       cursor: pointer;
       transition: background-color 0.3s ease;
+      margin-top: 20px;
+    }
+
+    #submit-btn {
+      padding: 10px 20px;
+      font-size: 16px;
+      background-color: #4CAF50;
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+      margin-top: 20px;
     }
 
     #submit-btn:hover,
@@ -109,8 +121,36 @@
       <p id="result"></p>
     </div>
   </div>
-  <script>
-    const wordDefinitions = data;
+
+  <script src="Helper.js"></script>
+  <script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.5.2/firebase-app.js";
+  import { getDatabase, ref, onValue} from "https://www.gstatic.com/firebasejs/10.5.2/firebase-database.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyDUdYpPR3EkVZ_JTip0tQ-bL19O7LUhOAs",
+      authDomain: "words-59aaa.firebaseapp.com",
+      databaseURL: "https://words-59aaa-default-rtdb.asia-southeast1.firebasedatabase.app",
+      projectId: "words-59aaa",
+      storageBucket: "words-59aaa.appspot.com",
+      messagingSenderId: "95469708600",
+      appId: "1:95469708600:web:3234040cf68d598fdecdcd",
+      measurementId: "G-DRPDSH7CGP"
+    };
+
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const database = getDatabase(app);
+    const topic = GetURLParameter('topic');
+
+    const starCountRef = ref(database, `/${topic}`);
+    var wordDefinitions = [];
+
+    onValue(starCountRef, (snapshot) => {
+      wordDefinitions = snapshot.val();
+      wordDefinitions = shuffle(wordDefinitions);
+      displayDefinition();
+    });
     let currentWordIndex = 0;
 
     // Display the definition of the current word
@@ -129,11 +169,12 @@
         animationElement.textContent = "Correct!";
         animationElement.className = "correct-animation";
       } else {
-        animationElement.textContent = `Incorrect. The correct word is "${correctAnswer}".`;
-        animationElement.className = "incorrect-animation";
+        wordDefinitions.push(wordDefinitions[currentWordIndex]);
+        animationElement.innerHTML = 
+        animationElement.textContent = `"<span class='incorrect-animation'>${correctAnswer}Correct!</span>" is the correct word.`;
       }
-
       animationElement.classList.remove("hidden");
+      animationElement.hidden = false;
     }
 
     // Move to the next question
@@ -143,18 +184,19 @@
 
       currentWordIndex++;
       answerInput.value = "";
-      animationElement.classList.add("hidden");
+      animationElement.hidden = true;
+
 
       if (currentWordIndex < wordDefinitions.length) {
         displayDefinition();
       } else {
         // All questions answered, show completion message or redirect to another page
         alert("Congratulations! You have completed all the questions.");
+        window.location.href = `Options.html?topic=${topic}`;
       }
     }
 
     // Event listeners
-    document.addEventListener("DOMContentLoaded", displayDefinition);
     document.getElementById("submit-btn").addEventListener("click", checkAnswer);
     document.getElementById("next-btn").addEventListener("click", nextQuestion);
     document.getElementById("user-input").addEventListener("keydown", function (event) {
