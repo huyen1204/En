@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f2f2f2;
+    }
+
+    .container {
+      width: 80%;
+      margin: 0 auto;
+      margin-top: 50px;
+      padding: 20px;
+      background-color: #fff;
+      border-radius: 5px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .option {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100px;
+      margin-bottom: 20px;
+      background-color: #e8e8e8;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    .option:hover {
+      background-color: #d4d4d4;
+    }
+
+    .option-icon {
+      width: 30px;
+      height: 30px;
+      margin-right: 10px;
+    }
+
+    .option-text {
+      font-size: 18px;
+    }
+  </style>
+</head>
+<body>
+  <h1 class="title" style="text-align: center;"></h1>
+  <div class="container">
+    <div class="option" onclick="optionClicked(1)">
+      <img src="img/flashcard_icon.png" alt="Option 1" class="option-icon">
+      <span class="option-text">Flash Card</span>
+    </div>
+    <div class="option" onclick="optionClicked(2)">
+      <img src="img/choose_icon.png" alt="Option 2" class="option-icon">
+      <span class="option-text">Choose meaning</span>
+    </div>
+    <div class="option" onclick="optionClicked(3)">
+      <img src="img/grap_fill_icon.png" alt="Option 3" class="option-icon">
+      <span class="option-text">Grap Fill</span>
+    </div>
+  </div>
+
+  <script src="Helper.js"></script>
+  <script>
+    const topic = GetURLParameter('topic');
+    const titleContent = document.querySelector('.title');
+    titleContent.textContent = topic;
+    function optionClicked(option) {
+      switch (option) {
+        case 1:
+          window.location.href = `FlashCash.html?topic=${topic}`;
+          break;
+        case 2:
+          window.location.href = `Choose.html?topic=${topic}`;
+          break;
+        case 3:
+          window.location.href = `GrapFill.html?topic=${topic}`;
+          break;
+        default:
+          break;
+      }
+    }
+  </script>
+</body>
+</html>
