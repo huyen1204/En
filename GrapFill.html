@@ -171,9 +171,8 @@
       } else {
         wordDefinitions.push(wordDefinitions[currentWordIndex]);
         animationElement.innerHTML = 
-        animationElement.textContent = `"<span class='incorrect-animation'>${correctAnswer}Correct!</span>" is the correct word.`;
+        animationElement.textContent = `"<span class='incorrect-animation'>${correctAnswer}</span>" is the correct word.`;
       }
-      animationElement.classList.remove("hidden");
       animationElement.hidden = false;
     }
 
