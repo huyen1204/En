@@ -132,7 +132,6 @@
     onValue(starCountRef, (snapshot) => {
       var dbwords = snapshot.val();
       dbwords = shuffle(dbwords);
-      console.log(dbwords);
       words = convert(dbwords);
       displayQuestion();
     });
