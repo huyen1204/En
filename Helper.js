@@ -31,17 +31,19 @@ function shuffle(array) {
 
 function convert(words) {
     let quizWords = [];
-    let definitions = words.map((m) => m.definition);
+    let definitions = words.filter((w) => w).map((m) => m.definition);
     words.forEach((word) => {
-      let okDefinitions = definitions.filter(d => d !== word.definition);
-      let shuffledDefinitions = shuffleArray(okDefinitions);
-      var correctDefinitionIndex = Math.floor(Math.random() * 4);
-      shuffledDefinitions[correctDefinitionIndex] = word.definition;
-      quizWords.push({
-        word: word.type ? `(${word.type}) ${word.word}` : word.word,
-        definitions: shuffledDefinitions,
-        correctDefinitionIndex: correctDefinitionIndex,
-      });
+      if (word) {
+        let okDefinitions = definitions.filter(d => d !== word.definition);
+        let shuffledDefinitions = shuffleArray(okDefinitions);
+        var correctDefinitionIndex = Math.floor(Math.random() * 4);
+        shuffledDefinitions[correctDefinitionIndex] = word.definition;
+        quizWords.push({
+          word: word.type ? `(${word.type}) ${word.word}` : word.word,
+          definitions: shuffledDefinitions,
+          correctDefinitionIndex: correctDefinitionIndex,
+        });
+      }
     });
     return quizWords;
   }
