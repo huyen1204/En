@@ -68,14 +68,12 @@ function convertToQuiz(words) {
       let definitions = words.map((w) => w.definition);
       let shuffledDefinitions = shuffleArray(definitions);
       let correctDefinitionIndex = shuffledDefinitions.indexOf(word.definition);
-  
       quizWords.push({
-        word: word.word,
+        word: word.type ? `(${word.type}) ${word.word}` : word.word,
         definitions: shuffledDefinitions,
         correctDefinitionIndex: correctDefinitionIndex,
       });
     });
-  
     return quizWords;
   }
   
