@@ -29,45 +29,14 @@ function shuffle(array) {
     return array;
 }
 
-function convertToQuiz(words) {
-    var quizWords = [];
-  
-    for (var i = 0; i < words.length; i++) {
-      var word = words[i].word;
-      var definitions = [];
-      var correctDefinitionIndex = Math.floor(Math.random() * 4);
-      const size = Math.min(words.length, 4);
-      console.log(size);
-      for (var j = 0; j < size; j++) {
-        if (j === correctDefinitionIndex) {
-          definitions.push(words[i].definition);
-        } else {
-            var randomIndex = i;
-          while (randomIndex === i) {
-            randomIndex = Math.floor(Math.random() * words.length);
-          }
-          console.log(`Random=${randomIndex}-Correct${i}-Word=${words[randomIndex]}`);
-          definitions.push(words[randomIndex].definition);
-        }
-      }
-  
-      quizWords.push({
-        word: word,
-        definitions: definitions,
-        correctDefinitionIndex: correctDefinitionIndex
-      });
-    }
-  
-    return quizWords;
-  }
-
-  function convert(words) {
+function convert(words) {
     let quizWords = [];
-  
+    let definitions = words.map((m) => m.definition);
     words.forEach((word) => {
-      let definitions = words.map((w) => w.definition);
-      let shuffledDefinitions = shuffleArray(definitions);
-      let correctDefinitionIndex = shuffledDefinitions.indexOf(word.definition);
+      let okDefinitions = definitions.filter(d => d !== word.definition);
+      let shuffledDefinitions = shuffleArray(okDefinitions);
+      var correctDefinitionIndex = Math.floor(Math.random() * 4);
+      shuffledDefinitions[correctDefinitionIndex] = word.definition;
       quizWords.push({
         word: word.type ? `(${word.type}) ${word.word}` : word.word,
         definitions: shuffledDefinitions,
