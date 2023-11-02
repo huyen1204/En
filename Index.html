@@ -104,12 +104,15 @@
     onValue(starCountRef, (snapshot) => {
       const data = snapshot.val();
       var topics = [];
+      var sizeArr = [];
       for (var topic in data) {
         topics.push(topic);
       }
+      console.log(sizeArr)
       const topicListElement = document.getElementById('topic-list');
       topics.forEach(topic => {
-        const topicElement = createTopicElement(topic, topic.length);
+        console.log(topic.length)
+        const topicElement = createTopicElement(topic, data[topic].length);
         topicListElement.appendChild(topicElement);
       });
     });
