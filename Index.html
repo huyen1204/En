@@ -108,15 +108,15 @@
       }
       const topicListElement = document.getElementById('topic-list');
       topics.forEach(topic => {
-        const topicElement = createTopicElement(topic);
+        const topicElement = createTopicElement(topic, topic.length);
         topicListElement.appendChild(topicElement);
       });
     });
 
-    function createTopicElement(topic) {
+    function createTopicElement(topic, size) {
       const topicElement = document.createElement('div');
       topicElement.classList.add('topic');
-      topicElement.textContent = topic;
+      topicElement.textContent = `${topic} (${size})`;
       topicElement.addEventListener('click', () => {
         window.location.href = `Options.html?topic=${encodeURIComponent(topic)}`;
       });
