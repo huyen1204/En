@@ -108,10 +108,8 @@
       for (var topic in data) {
         topics.push(topic);
       }
-      console.log(sizeArr)
       const topicListElement = document.getElementById('topic-list');
       topics.forEach(topic => {
-        console.log(topic.length)
         const topicElement = createTopicElement(topic, data[topic].length);
         topicListElement.appendChild(topicElement);
       });
