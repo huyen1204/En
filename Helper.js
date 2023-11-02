@@ -38,8 +38,16 @@ function convert(words) {
         let shuffledDefinitions = shuffleArray(okDefinitions);
         var correctDefinitionIndex = Math.floor(Math.random() * 4);
         shuffledDefinitions[correctDefinitionIndex] = word.definition;
+        let wordStr = "";
+        if (word.type) {
+          wordStr += `(${word.type}) `;
+        }
+        wordStr += `${word.word}`
+        if (word.pronunciation) {
+          wordStr += `\n${word.pronunciation}`;
+        }
         quizWords.push({
-          word: word.type ? `(${word.type}) ${word.word}` : word.word,
+          word: wordStr,
           definitions: shuffledDefinitions,
           correctDefinitionIndex: correctDefinitionIndex,
         });
