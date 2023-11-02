@@ -44,8 +44,6 @@
       box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     }
 
-
-
     .correct-animation {
       color: green;
       font-weight: bold;
@@ -103,6 +101,34 @@
       text-align: center;
       margin-top: 40px;
     }
+
+    #pronunciation-title {
+      cursor: pointer;
+    }
+
+    .pronunciation-detail {
+      display: none;
+    }
+
+    #pronunciation {
+      padding-top: 10px;
+    }
+
+    #image {
+      padding-top: 10px;
+      padding-bottom: 10px;
+    }
+
+    .center {
+      display: block;
+      margin-left: auto;
+      margin-right: auto;
+      width: 50%;
+    }
+
+    #image-title {
+      padding-bottom: 10px;
+    }
   </style>
 </head>
 
@@ -110,8 +136,16 @@
   <div id="container">
     <h1></h1>
     <div id="word-container">
-      <h2 id="word"></h2>
+      <b>Definition: </b>
       <p id="definition"></p>
+      <div id="pronunciation">
+        <b id="pronunciation-title" onclick="openPronun()">Pronunciation:</b>
+        <p id="pronunciation-detail"></p>
+      </div>
+      <div id="image">
+        <b id="image-title" onclick="openImage()">Image:</b>
+        <img id="image-detail" src="" alt="Image" class="center"/>
+      </div>
       <input type="text" id="user-input" placeholder="Type the word here">
       <div id="animation"></div>
       <button id="submit-btn">Submit</button>
@@ -143,6 +177,18 @@
     const database = getDatabase(app);
     const topic = GetURLParameter('topic');
 
+    const pronunciationElement = document.getElementById('pronunciation');
+    const pronunciationTitle = document.getElementById('pronunciation-title');
+    const pronunciationDetail = document.getElementById('pronunciation-detail');
+    pronunciationElement.style.display = 'none';
+    pronunciationDetail.style.display = 'none';
+
+    const imgElement = document.getElementById('image');
+    const imgTitle = document.getElementById('image-title');
+    const imgDetail = document.getElementById('image-detail');
+    imgElement.style.display = 'none';
+    imgDetail.style.display = 'none';
+
     const starCountRef = ref(database, `/${topic}`);
     var wordDefinitions = [];
 
@@ -156,7 +202,22 @@
     // Display the definition of the current word
     function displayDefinition() {
       const definitionElement = document.getElementById("definition");
-      definitionElement.textContent = `Definition: ${wordDefinitions[currentWordIndex].definition}`;
+      
+      const word = wordDefinitions[currentWordIndex];
+      
+      definitionElement.innerHTML = "";
+      if (word.type) {
+        definitionElement.innerHTML += `(${word.type})`;
+      }
+      definitionElement.innerHTML += `${wordDefinitions[currentWordIndex].definition}`;
+      if (word.pronunciation) {
+        pronunciationElement.style.display = 'block';
+        pronunciationDetail.textContent = word.pronunciation;
+      }
+      if (word.image) {
+        imgElement.style.display = 'block';
+        imgDetail.src = word.image;
+      }
     }
 
     // Check the user's answer and display the animation accordingly
@@ -202,6 +263,32 @@
         checkAnswer();
       }
     });
+    
+  //   document.addEventListener('DOMContentLoaded', function() {
+  //   const elements = document.querySelectorAll('.element');
+
+  //   elements.forEach(function(element) {
+  //     element.addEventListener('click', function() {
+  //       const detailContent = this.querySelector('.detail-content');
+  //       detailContent.style.display = (detailContent.style.display === 'block') ? 'none' : 'block';
+  //     });
+  //   });
+  // });
+  window.openPronun = function openPronun() {
+    if (pronunciationDetail.style.display === 'none') {
+      pronunciationDetail.style.display = 'block';
+    } else {
+      pronunciationDetail.style.display = 'none';
+    }
+  }
+
+  window.openImage = function openImage() {
+    if (imgDetail.style.display === 'none') {
+      imgDetail.style.display = 'block';
+    } else {
+      imgDetail.style.display = 'none';
+    }
+  }
   </script>
 </body>
 
