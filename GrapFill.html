@@ -208,7 +208,9 @@
     function displayDefinition() {
       initial();
       const definitionElement = document.getElementById("definition");
-      
+      while (!wordDefinitions[currentWordIndex]) {
+        currentWordIndex++;
+      }
       const word = wordDefinitions[currentWordIndex];
       
       definitionElement.innerHTML = "";
@@ -232,7 +234,7 @@
       const animationElement = document.getElementById("animation");
       const correctAnswer = wordDefinitions[currentWordIndex].word;
 
-      if (answerInput.value.toLowerCase() === correctAnswer) {
+      if (answerInput.value.toLowerCase() === correctAnswer.toLowerCase()) {
         animationElement.textContent = "Correct!";
         animationElement.className = "correct-animation";
       } else {
