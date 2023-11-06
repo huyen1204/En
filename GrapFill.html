@@ -180,14 +180,11 @@
     const pronunciationElement = document.getElementById('pronunciation');
     const pronunciationTitle = document.getElementById('pronunciation-title');
     const pronunciationDetail = document.getElementById('pronunciation-detail');
-    pronunciationElement.style.display = 'none';
-    pronunciationDetail.style.display = 'none';
+   
 
     const imgElement = document.getElementById('image');
     const imgTitle = document.getElementById('image-title');
     const imgDetail = document.getElementById('image-detail');
-    imgElement.style.display = 'none';
-    imgDetail.style.display = 'none';
 
     const starCountRef = ref(database, `/${topic}`);
     var wordDefinitions = [];
@@ -199,8 +196,17 @@
     });
     let currentWordIndex = 0;
 
+
+    function initial() {
+      pronunciationElement.style.display = 'none';
+      pronunciationDetail.style.display = 'none';
+      imgElement.style.display = 'none';
+      imgDetail.style.display = 'none';
+    }
+
     // Display the definition of the current word
     function displayDefinition() {
+      initial();
       const definitionElement = document.getElementById("definition");
       
       const word = wordDefinitions[currentWordIndex];
