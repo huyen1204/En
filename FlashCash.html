@@ -111,6 +111,9 @@
 
 
     function updateFlashcard() {
+      while (!flashcards[currentCardIndex]) {
+        currentCardIndex++;
+      }
       var currentCard = flashcards[currentCardIndex];
       frontContent.textContent = "";
       backContent.textContent = "";
