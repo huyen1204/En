@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <style>
+        table {
+            /* width: 80%; */
+            /* border-collapse: collapse; */
+            margin-left: 20px;
+            font-size: 20;
+        }
+
+        #container {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+
+        #data-table {
+            width: 90%;
+        }
+
+        table th,
+        table td {
+            padding: 10px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        table th {
+            background-color: #f2f2f2;
+            color: #333;
+        }
+
+        table tr:hover {
+            background-color: #f9f9f9;
+        }
+
+        table td:first-child {
+            font-weight: bold;
+        }
+
+        table td:last-child {
+            text-align: right;
+        }
+
+        input[type="text"] {
+            padding: 5px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            transition: border-color 0.3s ease-in-out;
+            width: 100%;
+            overflow: visible;
+            white-space: nowrap;
+        }
+
+        input[type="text"]:focus {
+            outline: none;
+            border-color: #007bff;
+        }
+
+        #save-button {
+            padding: 10px 20px;
+            background-color: #333;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            margin-top: 20px;
+            float: right;
+            margin-left: 10px;
+        }
+
+        #add-button {
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            margin-top: 20px;
+            float: right;
+            margin-left: 10px;
+            margin-bottom: 20px;
+        }
+
+        .delete-button {
+            border: none;
+            background-color: white;
+        }
+
+        .resize-handle {
+            width: 6px;
+            cursor: col-resize;
+            background-color: #f1f1f1;
+        }
+
+        .correct-animation {
+            color: green;
+        }
+
+        .incorrect-animation {
+            color: red;
+        }
+    </style>
+</head>
+
+<body>
+    <button style="margin-left: 20px;margin-top: 20px;" onclick="backOptions()">< Back</button>
+    <div id="container">
+        <h1 class="title"></h1>    
+        <table id="data-table">
+            <thead>
+                <tr>
+                    <th>Word</th>
+                    <th style="width: 60px;">Type</th>
+                    <th style="width:100px">Pronunciation</th>
+                    <th>Definition</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Table rows will be dynamically generated here -->
+            </tbody>
+        </table>
+        <div>
+            <button id="save-button" onclick="saveChanges()">Save</button>
+            <button id="add-button" onclick="addRow()">Add</button>
+        </div>
+        <div id="animation"></div>
+    </div>
+
+    <script src="Helper.js"></script>
+    <script type="module">
+
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.5.2/firebase-app.js";
+        import { getDatabase, ref, onValue, update } from "https://www.gstatic.com/firebasejs/10.5.2/firebase-database.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyDUdYpPR3EkVZ_JTip0tQ-bL19O7LUhOAs",
+            authDomain: "words-59aaa.firebaseapp.com",
+            databaseURL: "https://words-59aaa-default-rtdb.asia-southeast1.firebasedatabase.app",
+            projectId: "words-59aaa",
+            storageBucket: "words-59aaa.appspot.com",
+            messagingSenderId: "95469708600",
+            appId: "1:95469708600:web:3234040cf68d598fdecdcd",
+            measurementId: "G-DRPDSH7CGP"
+        };
+
+        const topic = GetURLParameter('topic');
+        const titleContent = document.querySelector('.title');
+        titleContent.textContent = topic;
+        const headers = ["word", "type", "pronunciation", "definition"];
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const database = getDatabase(app);
+        const starCountRef = ref(database, `/${topic}`);
+        var data = [];
+        onValue(starCountRef, (snapshot) => {
+            data = snapshot.val();
+            generateTable();
+        });
+
+        var tableBody = document.querySelector('#data-table tbody');
+
+        // Function to generate table rows from data array
+        function generateTable() {
+            tableBody.innerHTML = '';
+
+            for (var i = 0; i < data.length; i++) {
+                var row = document.createElement('tr');
+                const rowData = data[i];
+                headers.forEach((header) => {
+                    const td = document.createElement("td");
+                    td.innerHTML = `<input type="text" class="edit-input" style="font-size: medium;" value="${rowData[header]}">`;
+                    row.appendChild(td);
+                });
+
+                var actionsCell = document.createElement('td');
+
+                var deleteButton = document.createElement('button');
+                deleteButton.innerHTML = '<img src="img/delete_icon.jpg" style="width:20px;height:20px;"/>';
+                deleteButton.classList.add("delete-button");
+                deleteButton.addEventListener("click", () => {
+                    deleteRow(row);
+                });
+                actionsCell.appendChild(deleteButton);
+
+                row.appendChild(actionsCell);
+                tableBody.appendChild(row);
+            }
+        }
+
+        // Function to delete a row
+        function deleteRow(row) {
+            tableBody.removeChild(row);
+        }
+
+        document.addRow = function addRow() {
+            const tableBody = document.querySelector("tbody");
+            const row = document.createElement("tr");
+
+            headers.forEach(() => {
+                const td = document.createElement("td");
+                td.innerHTML = `<input type="text" class="edit-input">`;
+                row.appendChild(td);
+            });
+
+            var actionsCell = document.createElement('td');
+
+            var deleteButton = document.createElement('button');
+            deleteButton.innerHTML = '<img src="img/delete_icon.jpg" style="width:20px;height:20px;"/>';
+            deleteButton.classList.add("delete-button");
+            deleteButton.addEventListener("click", () => {
+                deleteRow(row);
+            });
+            actionsCell.appendChild(deleteButton);
+
+            row.appendChild(actionsCell);
+            tableBody.appendChild(row);
+        }
+
+        document.saveChanges = function saveChanges() {
+            const rows = tableBody.getElementsByTagName("tr");
+            const updatedData = [];
+            Array.from(rows).forEach((row) => {
+                const tds = row.getElementsByTagName("td");
+                const updatedRow = {};
+
+                Array.from(tds).forEach((td, index) => {
+                    const input = td.querySelector("input");
+                    if (input) {
+                        updatedRow[headers[index]] = input.value;
+                    }
+                });
+                updatedData.push(updatedRow);
+            });
+
+            saveData(updatedData);
+        }
+
+        function saveData(words) {
+            const animationElement = document.getElementById("animation");
+            try {
+                var jsonData = {};
+                jsonData[topic] = words;
+                update(ref(database, `/`), jsonData)
+                    .then(() => {
+                        animationElement.innerHTML = "<span class='correct-animation'>Data added to Firebase successfully!</span>";
+                        // location.reload();
+                    })
+                    .catch((error) => {
+                        animationElement.innerHTML = `<span class='incorrect-animation'>Can not save JSON!</span>`;
+                    });
+            } catch (error) {
+                animationElement.innerHTML = `<span class='incorrect-animation'>Invalid JSON input!</span>`;
+            }
+        }
+
+        document.backOptions = function backOptions() {
+            window.location.href = `Options.html?topic=${topic}`;
+        }
+
+    </script>
+</body>
+
+</html>
