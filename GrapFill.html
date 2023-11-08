@@ -138,13 +138,13 @@
     <div id="word-container">
       <b>Definition: </b>
       <p id="definition"></p>
-      <div id="pronunciation">
-        <b id="pronunciation-title" onclick="openPronun()">Pronunciation:</b>
-        <p id="pronunciation-detail"></p>
-      </div>
       <div id="image">
         <b id="image-title" onclick="openImage()">Image:</b>
         <img id="image-detail" src="" alt="Image" class="center"/>
+      </div>
+      <div id="pronunciation">
+        <b id="pronunciation-title" onclick="openPronun()">Pronunciation:</b>
+        <p id="pronunciation-detail"></p>
       </div>
       <input type="text" id="user-input" placeholder="Type the word here">
       <div id="animation"></div>
@@ -200,8 +200,8 @@
     function initial() {
       pronunciationElement.style.display = 'none';
       pronunciationDetail.style.display = 'none';
-      imgElement.style.display = 'none';
-      imgDetail.style.display = 'none';
+      imgElement.style.display = 'block';
+      imgDetail.style.display = 'block';
     }
 
     // Display the definition of the current word
