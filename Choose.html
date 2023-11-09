@@ -99,9 +99,7 @@
       <h2 id="word" style="white-space: pre-line;">Word</h2>
     </div>
     <div class="options">
-      <button class="option" onclick="checkAnswer(0)">
-        <div class="option"></div>
-      </button>
+      <button class="option" onclick="checkAnswer(0)">Definition 1</button>
       <button class="option" onclick="checkAnswer(1)">Definition 2</button>
       <button class="option" onclick="checkAnswer(2)">Definition 3</button>
       <button class="option" onclick="checkAnswer(3)">Definition 4</button>
@@ -148,16 +146,18 @@
       const options = document.querySelectorAll(".option");
       
       wordElement.textContent = words[currentQuestion].word;
-
+      console.log(options)
       options.forEach((option, index) => {
+        console.log(`Index: ${index}`)
         option.textContent = words[currentQuestion].definitions[index];
+        console.log(words[currentQuestion].definitions[index])
       });
     }
 
     // Function to check the user's answer
     window.checkAnswer = function checkAnswer(selectedIndex) {
       const resultElement = document.getElementById("result");
-
+      console.log(selectedIndex)
       if (selectedIndex === words[currentQuestion].correctDefinitionIndex) {
         resultElement.innerHTML =
           "<span class='correct-definition'>Correct!</span>";
