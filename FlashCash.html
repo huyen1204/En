@@ -121,10 +121,13 @@
         frontContent.textContent += `(${currentCard.type})\n`;
         backContent.textContent += `(${currentCard.type})\n`;
       }
-      if (currentCard.pronunciation) {
-        frontContent.textContent += `${currentCard.pronunciation}\n`;
-      }
+      
       frontContent.textContent += `${currentCard.word}`;
+
+      if (currentCard.pronunciation) {
+        frontContent.textContent += `\n${currentCard.pronunciation}`;
+      }
+
       backContent.textContent += currentCard.definition;
       frontContent.style.display = 'block';
       backContent.style.display = 'none';
