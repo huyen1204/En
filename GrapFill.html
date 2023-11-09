@@ -215,7 +215,7 @@
       
       definitionElement.innerHTML = "";
       if (word.type) {
-        definitionElement.innerHTML += `(${word.type})`;
+        definitionElement.innerHTML += `(${word.type}) `;
       }
       definitionElement.innerHTML += `${wordDefinitions[currentWordIndex].definition}`;
       if (word.pronunciation) {
