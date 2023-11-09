@@ -200,8 +200,8 @@
     function initial() {
       pronunciationElement.style.display = 'none';
       pronunciationDetail.style.display = 'none';
-      imgElement.style.display = 'block';
-      imgDetail.style.display = 'block';
+      imgElement.style.display = 'none';
+      imgDetail.style.display = 'none';
     }
 
     // Display the definition of the current word
@@ -224,6 +224,7 @@
       }
       if (word.image) {
         imgElement.style.display = 'block';
+        imgDetail.style.display = 'block';
         imgDetail.src = word.image;
       }
     }
