@@ -149,8 +149,9 @@
       if (currentCardIndex >= flashcards.length) {
         alert("Congratulations! You have completed all words.");
         window.location.href = `Options.html?topic=${topic}`;
+      } else {
+        updateFlashcard();
       }
-      updateFlashcard();
     }
   </script>
   <script src="Helper.js"></script>
