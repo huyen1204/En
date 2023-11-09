@@ -262,11 +262,12 @@
                 // Function to generate table rows from data array
                 function generateTable() {
                     tableBody.innerHTML = '';
-
+                    console.log(data)
                     for (var i = 0; i < data.length; i++) {
                         var row = document.createElement('tr');
                         const rowData = data[i];
-                        headers.forEach((header) => {
+                        if (rowData) {
+                            headers.forEach((header) => {
                             const td = document.createElement("td");
                             const value = rowData[header] ? rowData[header] : "";
                             td.innerHTML = `<input type="text" class="edit-input" style="font-size: medium;" value="${value}">`;
@@ -285,6 +286,7 @@
 
                         row.appendChild(actionsCell);
                         tableBody.appendChild(row);
+                        }
                     }
                 }
 
