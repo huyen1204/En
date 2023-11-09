@@ -76,8 +76,8 @@
   <div id="container">
     <h1>Topics</h1>
     <div id="topic-list"></div>
-    <input type="text" id="jsonInput" placeholder="Enter JSON data">
-    <button id="next-btn" onclick="addData()">Add</button>
+    <input type="text" id="jsonInput" placeholder="Enter topic name">
+    <button id="next-btn" onclick="addTopic()">Add</button>
     <div id="animation"></div>
   </div>
   <script type="module">
@@ -140,6 +140,27 @@
         });
       } catch (error) {
         animationElement.innerHTML = `<span class='incorrect-animation'>Invalid JSON input!</span>`;
+      }
+      
+    }
+
+    window.addTopic = function addTopic() {
+      var jsonInput = document.getElementById("jsonInput").value;
+      const animationElement = document.getElementById("animation");
+      try {
+        var jsonData = {};
+        jsonData[jsonInput] = [{"word": ""}];
+        console.log(jsonData)
+        update(ref(database, '/'), jsonData)
+        .then(() => {
+          animationElement.innerHTML = "<span class='correct-animation'>Create topic successfully!</span>";
+          window.location.href = `Table.html?topic=${jsonInput}`;
+        })
+        .catch((error) => {
+          animationElement.innerHTML = `<span class='incorrect-animation'>Can not create topic!</span>`;
+        });
+      } catch (error) {
+        animationElement.innerHTML = `<span class='incorrect-animation'>Error!</span>`;
       }
       
     }
