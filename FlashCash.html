@@ -74,7 +74,7 @@
       <h4 class="front" style="white-space: pre-line;"></h4>
       <div class="back" style="white-space: pre-line;"></div>
     </div>
-    <button class="next-button" onclick="nextCard()">Next</button>
+    <button id="next-btn" class="next-button" onclick="nextCard()">Next</button>
   </div>
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.5.2/firebase-app.js";
@@ -155,6 +155,16 @@
         updateFlashcard();
       }
     }
+
+    document.addEventListener('keydown', function(event) {
+      console.log(event.keyCode)
+      if (event.keyCode === 32) {
+        nextCard();
+      }
+      if (event.keyCode === 13) {
+        flipCard();
+      }
+    });
   </script>
   <script src="Helper.js"></script>
 </body>
