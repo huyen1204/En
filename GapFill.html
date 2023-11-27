@@ -233,9 +233,10 @@
     function checkAnswer() {
       const answerInput = document.getElementById("user-input");
       const animationElement = document.getElementById("animation");
-      const correctAnswer = wordDefinitions[currentWordIndex].word;
+      const correctAnswer = wordDefinitions[currentWordIndex].word.toLowerCase().trim();
+      const inputAnswer = answerInput.value.toLowerCase().trim();
 
-      if (answerInput.value.toLowerCase() === correctAnswer.toLowerCase()) {
+      if (inputAnswer === correctAnswer) {
         animationElement.textContent = "Correct!";
         animationElement.className = "correct-animation";
       } else {
@@ -288,6 +289,12 @@
       imgDetail.style.display = 'none';
     }
   }
+
+  document.addEventListener('keydown', function(event) {
+      if (event.keyCode === 32) {
+        nextQuestion();
+      }
+    });
   </script>
 </body>
 
