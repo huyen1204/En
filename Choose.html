@@ -107,7 +107,7 @@
     <div class="result">
       <p id="result"></p>
     </div>
-    <button class="next-button" onclick="nextQuestion()">Next</button>
+    <button id="next-btn" class="next-button" onclick="nextQuestion()">Next</button>
   </div>
   <script src="Helper.js"></script>
   <script type="module">
@@ -146,18 +146,14 @@
       const options = document.querySelectorAll(".option");
       
       wordElement.textContent = words[currentQuestion].word;
-      console.log(options)
       options.forEach((option, index) => {
-        console.log(`Index: ${index}`)
         option.textContent = words[currentQuestion].definitions[index];
-        console.log(words[currentQuestion].definitions[index])
       });
     }
 
     // Function to check the user's answer
     window.checkAnswer = function checkAnswer(selectedIndex) {
       const resultElement = document.getElementById("result");
-      console.log(selectedIndex)
       if (selectedIndex === words[currentQuestion].correctDefinitionIndex) {
         resultElement.innerHTML =
           "<span class='correct-definition'>Correct!</span>";
@@ -191,7 +187,20 @@
       } else {
         displayQuestion();
       }
-    }    
+    }
+    document.addEventListener('keydown', function(event) {
+      if (event.keyCode === 32) {
+        nextQuestion();
+      } else if (event.key === "1"){
+        checkAnswer(0);
+      } else if (event.key === "2"){
+        checkAnswer(1);
+      } else if (event.key === "3"){
+        checkAnswer(2);
+      } else if (event.key === "4"){
+        checkAnswer(3);
+      }
+    });
   </script>
 </body>
 
