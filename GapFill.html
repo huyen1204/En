@@ -280,6 +280,8 @@
     } else {
       pronunciationDetail.style.display = 'none';
     }
+    var inputElement = document.getElementById('user-input');
+    inputElement.focus();
   }
 
   window.openImage = function openImage() {
@@ -288,15 +290,16 @@
     } else {
       imgDetail.style.display = 'none';
     }
+    var inputElement = document.getElementById('user-input');
+    inputElement.focus();
   }
 
   document.addEventListener('keydown', function(event) {
-      if (event.keyCode === 16) {
+      console.log(event.keyCode)
+      if (event.keyCode === 18) {
         nextQuestion();
       }
     });
-    var inputElement = document.getElementById('user-input');
-    inputElement.focus();
   </script>
 </body>
 
