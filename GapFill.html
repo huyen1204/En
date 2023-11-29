@@ -234,36 +234,45 @@
     // Check the user's answer and display the animation accordingly
     function checkAnswer() {
       const answerInput = document.getElementById("user-input");
-      const animationElement = document.getElementById("animation");
-      const correctAnswer = wordDefinitions[currentWordIndex].word.toLowerCase().trim();
-      const inputAnswer = answerInput.value.toLowerCase().trim();
-
-      if (inputAnswer === correctAnswer) {
-        animationElement.textContent = "Correct!";
-        animationElement.className = "correct-animation";
+      if (answerInput.value.toLowerCase().trim() === "") {
+        alert("Type a word!");
       } else {
-        wordDefinitions.push(wordDefinitions[currentWordIndex]);
-        animationElement.innerHTML = `"<span class='incorrect-animation'>${correctAnswer}</span>" is the correct word.`;
+        const animationElement = document.getElementById("animation");
+        const correctAnswer = wordDefinitions[currentWordIndex].word.toLowerCase().trim();
+        const inputAnswer = answerInput.value.toLowerCase().trim();
+
+        if (inputAnswer === correctAnswer) {
+          animationElement.textContent = "Correct!";
+          animationElement.className = "correct-animation";
+        } else {
+          wordDefinitions.push(wordDefinitions[currentWordIndex]);
+          animationElement.innerHTML = `"<span class='incorrect-animation'>${correctAnswer}</span>" is the correct word.`;
+        }
+        animationElement.hidden = false;
       }
-      animationElement.hidden = false;
     }
 
     // Move to the next question
     function nextQuestion() {
       const answerInput = document.getElementById("user-input");
-      const animationElement = document.getElementById("animation");
-
-      currentWordIndex++;
-      answerInput.value = "";
-      animationElement.hidden = true;
-
-
-      if (currentWordIndex < wordDefinitions.length) {
-        displayDefinition();
+      if (answerInput.value.toLowerCase().trim() === "") {
+        alert("Type a word!");
       } else {
-        // All questions answered, show completion message or redirect to another page
-        alert("Congratulations! You have completed all the questions.");
-        window.location.href = `Options.html?topic=${topic}`;
+        const answerInput = document.getElementById("user-input");
+        const animationElement = document.getElementById("animation");
+
+        currentWordIndex++;
+        answerInput.value = "";
+        animationElement.hidden = true;
+
+
+        if (currentWordIndex < wordDefinitions.length) {
+          displayDefinition();
+        } else {
+          // All questions answered, show completion message or redirect to another page
+          alert("Congratulations! You have completed all the questions.");
+          window.location.href = `Options.html?topic=${topic}`;
+        }
       }
     }
 
