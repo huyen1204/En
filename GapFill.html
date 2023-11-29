@@ -240,14 +240,16 @@
       } else {
         isChecked = true;
         const animationElement = document.getElementById("animation");
-        const correctAnswer = wordDefinitions[currentWordIndex].word.toLowerCase().trim();
+
+        const wordObj = wordDefinitions[currentWordIndex];
+        const correctAnswer = wordObj.word.toLowerCase().trim();
         const inputAnswer = answerInput.value.toLowerCase().trim();
 
         if (inputAnswer === correctAnswer) {
-          animationElement.textContent = "Correct!";
-          animationElement.className = "correct-animation";
+          console.log(`${correctAnswer}`)
+          animationElement.innerHTML = `<span class='correct-animation'>${wordObj.pronunciation}</span> is correct!`;
         } else {
-          wordDefinitions.push(wordDefinitions[currentWordIndex]);
+          wordDefinitions.push(wordObj);
           animationElement.innerHTML = `"<span class='incorrect-animation'>${correctAnswer}</span>" is the correct word.`;
         }
         animationElement.hidden = false;
