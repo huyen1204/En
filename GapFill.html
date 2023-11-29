@@ -188,6 +188,7 @@
 
     const starCountRef = ref(database, `/${topic}`);
     var wordDefinitions = [];
+    var isChecked = false;
 
     onValue(starCountRef, (snapshot) => {
       wordDefinitions = snapshot.val();
@@ -237,6 +238,7 @@
       if (answerInput.value.toLowerCase().trim() === "") {
         alert("Type a word!");
       } else {
+        isChecked = true;
         const animationElement = document.getElementById("animation");
         const correctAnswer = wordDefinitions[currentWordIndex].word.toLowerCase().trim();
         const inputAnswer = answerInput.value.toLowerCase().trim();
@@ -254,10 +256,10 @@
 
     // Move to the next question
     function nextQuestion() {
-      const answerInput = document.getElementById("user-input");
-      if (answerInput.value.toLowerCase().trim() === "") {
-        alert("Type a word!");
+      if (!isChecked) {
+        alert("Submit the word!");
       } else {
+        isChecked = false;
         const answerInput = document.getElementById("user-input");
         const animationElement = document.getElementById("animation");
 
