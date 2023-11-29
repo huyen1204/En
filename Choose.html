@@ -130,6 +130,7 @@
     const database = getDatabase(app);
     const topic = GetURLParameter('topic');
     const starCountRef = ref(database, `/${topic}`);
+    var isCheckAns = false;
     var words = [];
     onValue(starCountRef, (snapshot) => {
       var dbwords = snapshot.val();
@@ -153,6 +154,7 @@
 
     // Function to check the user's answer
     window.checkAnswer = function checkAnswer(selectedIndex) {
+      isCheckAns = true;
       const resultElement = document.getElementById("result");
       if (selectedIndex === words[currentQuestion].correctDefinitionIndex) {
         resultElement.innerHTML =
@@ -171,21 +173,25 @@
 
     // Function to move to the next question
     window.nextQuestion = function nextQuestion() {
-      const resultElement = document.getElementById("result");      resultElement.textContent = "";
-
-      currentQuestion++;
-
-      if (currentQuestion >= words.length) {
-        // Display final score when all questions are answered
-        alert(
-          "Quiz completed! Your score: " +
-          correctAnswers +
-          "/" +
-          words.length
-        );
-        window.location.href = `Options.html?topic=${topic}`;
+      if (!isCheckAns) {
+        alert("Choose an answer!");
       } else {
-        displayQuestion();
+        isCheckAns = false;
+        const resultElement = document.getElementById("result");
+        resultElement.textContent = "";
+        currentQuestion++;
+        if (currentQuestion >= words.length) {
+          // Display final score when all questions are answered
+          alert(
+            "Quiz completed! Your score: " +
+            correctAnswers +
+            "/" +
+            words.length
+          );
+          window.location.href = `Options.html?topic=${topic}`;
+        } else {
+          displayQuestion();
+        }
       }
     }
     document.addEventListener('keydown', function(event) {
