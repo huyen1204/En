@@ -71,7 +71,7 @@
       margin-top: 20px;
     }
 
-    #submit-btn {
+    /* #submit-btn {
       padding: 15px 20px;
       font-size: 16px;
       background-color: #4CAF50;
@@ -83,10 +83,10 @@
       margin-top: 20px;
     }
 
-    #submit-btn:hover,
+    #submit-btn:hover, */
     #next-btn:hover {
       background-color: #555;
-    }
+    } 
 
     #user-input {
       width: 80%;
@@ -148,7 +148,7 @@
       </div>
       <input type="text" id="user-input" placeholder="Type the word here" autofocus>
       <div id="animation"></div>
-      <button id="submit-btn">Submit</button>
+      <!-- /<button id="submit-btn">Submit</button> -->
       <button id="next-btn">Next</button>
     </div>
     <div id="result-container">
@@ -186,6 +186,9 @@
     const imgTitle = document.getElementById('image-title');
     const imgDetail = document.getElementById('image-detail');
 
+    const nextButton = document.getElementById('next-btn');
+
+
     const starCountRef = ref(database, `/${topic}`);
     var wordDefinitions = [];
     var isChecked = false;
@@ -203,6 +206,7 @@
       pronunciationDetail.style.display = 'none';
       imgElement.style.display = 'none';
       imgDetail.style.display = 'none';
+      nextButton.style.display = 'none';
       var inputElement = document.getElementById('user-input');
       inputElement.focus();
     }
@@ -256,6 +260,7 @@
           animationElement.innerHTML = `"<span class='incorrect-animation'>${correctAnswer}</span>" is the correct word.`;
         }
         animationElement.hidden = false;
+        nextButton.style.display = 'inline';
       }
     }
 
@@ -284,7 +289,7 @@
     }
 
     // Event listeners
-    document.getElementById("submit-btn").addEventListener("click", checkAnswer);
+    // document.getElementById("submit-btn").addEventListener("click", checkAnswer);
     document.getElementById("next-btn").addEventListener("click", nextQuestion);
     document.getElementById("user-input").addEventListener("keydown", function (event) {
       if (event.key === "Enter") {
