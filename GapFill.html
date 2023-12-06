@@ -192,10 +192,12 @@
     const starCountRef = ref(database, `/${topic}`);
     var wordDefinitions = [];
     var isChecked = false;
+    var updatedWords = [];
 
     onValue(starCountRef, (snapshot) => {
       wordDefinitions = snapshot.val();
       wordDefinitions = shuffle(wordDefinitions);
+      updatedWords = wordDefinitions;
       displayDefinition();
     });
     let currentWordIndex = 0;
@@ -255,9 +257,21 @@
           } else {
             animationElement.innerHTML = `<span class='correct-animation'>Correct!</span>`;
           }
+          // desc rank when it's correct
+          if (updatedWords[currentWordIndex].rank && updatedWords[currentWordIndex].rank > 0) {
+            updatedWords[currentWordIndex].rank -= 1;
+          } else {
+            updatedWords[currentWordIndex].rank = 0;
+          }
         } else {
           wordDefinitions.push(wordObj);
           animationElement.innerHTML = `"<span class='incorrect-animation'>${correctAnswer}</span>" is the correct word.`;
+          // count rank when it's wrong
+          if (updatedWords[currentWordIndex].rank) {
+            updatedWords[currentWordIndex].rank += 1;
+          } else {
+            updatedWords[currentWordIndex].rank = 1;
+          }
         }
         animationElement.hidden = false;
         nextButton.style.display = 'inline';
