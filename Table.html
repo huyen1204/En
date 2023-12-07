@@ -200,10 +200,11 @@
                     <thead>
                         <tr>
                             <th style="width:260px">Word</th>
-                            <th style="width: 60px;">Type</th>
+                            <th style="width: 50px;">Type</th>
                             <th style="width:100px">Pronunciation</th>
                             <th>Definition</th>
                             <th style="width:120px">Image</th>
+                            <th style="width:20px">F</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -238,7 +239,7 @@
                 const animationElement = document.getElementById("animation");
                 const titleContent = document.querySelector('.title');
                 titleContent.textContent = topic;
-                const headers = ["word", "type", "pronunciation", "definition", "image"];
+                const headers = ["word", "type", "pronunciation", "definition", "image", "rank"];
 
                 // Initialize Firebase
                 const app = initializeApp(firebaseConfig);
@@ -268,7 +269,7 @@
                         if (rowData) {
                             headers.forEach((header) => {
                             const td = document.createElement("td");
-                            const value = rowData[header] ? rowData[header] : "";
+                            const value = rowData[header] !== undefined ? rowData[header] : "";
                             td.innerHTML = `<input type="text" class="edit-input" style="font-size: medium;" value="${value}">`;
                             row.appendChild(td);
                         });
