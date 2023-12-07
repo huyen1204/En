@@ -99,7 +99,8 @@
     var flashcards = [];
     onValue(starCountRef, (snapshot) => {
       flashcards = snapshot.val();
-      flashcards = shuffle(flashcards);
+      const filteredArr = filterArray(flashcards);
+      flashcards = filteredArr[0];
       updateFlashcard();
     });
     const flashcard = document.querySelector('.flashcard');
