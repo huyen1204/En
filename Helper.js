@@ -78,8 +78,10 @@ function convert(words) {
     let hiddenWords = [];
     for (let i = 0; i < words.length; i++) {
       let word = words[i];
-      if (word.rank === undefined) {
+      if (word.rank === undefined || word.rank === "") {
         word.rank = 0;
+      } else {
+        word.rank = parseInt(word.rank);
       }
       if (word.rank >= 0) {
         learningWords.push(word);
