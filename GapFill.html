@@ -86,7 +86,7 @@
     #submit-btn:hover, */
     #next-btn:hover {
       background-color: #555;
-    } 
+    }
 
     #user-input {
       width: 80%;
@@ -129,6 +129,46 @@
     #image-title {
       padding-bottom: 10px;
     }
+
+    #checkbox-container {
+      position: relative;
+      display: inline-block;
+      cursor: pointer;
+    }
+
+    #checkbox-container input[type="checkbox"] {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    #checkbox-container label {
+      position: absolute;
+      width: 20px;
+      height: 20px;
+      background-color: #eee;
+      border-radius: 4px;
+    }
+
+    #checkbox-container span {
+      margin-left: 30px;
+    }
+
+    #checkbox-container input[type="checkbox"]:checked+label {
+      background-color: #2196F3;
+    }
+
+    #checkbox-container input[type="checkbox"]:checked+label:after {
+      content: "";
+      position: absolute;
+      top: 5px;
+      left: 7px;
+      width: 6px;
+      height: 10px;
+      border: solid white;
+      border-width: 0 2px 2px 0;
+      transform: rotate(45deg);
+    }
   </style>
 </head>
 
@@ -140,11 +180,16 @@
       <p id="definition"></p>
       <div id="image">
         <b id="image-title" onclick="openImage()">Image:</b>
-        <img id="image-detail" src="" alt="Image" class="center"/>
+        <img id="image-detail" src="" alt="Image" class="center" />
       </div>
       <div id="pronunciation">
         <b id="pronunciation-title" onclick="openPronun()">Pronunciation:</b>
         <p id="pronunciation-detail"></p>
+      </div>
+      <div id="checkbox-container">
+        <input type="checkbox" id="myCheckbox" onclick="handleCheckboxClick()">
+        <label for="myCheckbox"></label>
+        <span>Hidden</span>
       </div>
       <input type="text" id="user-input" placeholder="Type the word here" autofocus>
       <div id="animation"></div>
@@ -158,8 +203,8 @@
 
   <script src="Helper.js"></script>
   <script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.5.2/firebase-app.js";
-  import { getDatabase, ref, onValue} from "https://www.gstatic.com/firebasejs/10.5.2/firebase-database.js";
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.5.2/firebase-app.js";
+    import { getDatabase, ref, onValue, update } from "https://www.gstatic.com/firebasejs/10.5.2/firebase-database.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyDUdYpPR3EkVZ_JTip0tQ-bL19O7LUhOAs",
@@ -180,25 +225,33 @@
     const pronunciationElement = document.getElementById('pronunciation');
     const pronunciationTitle = document.getElementById('pronunciation-title');
     const pronunciationDetail = document.getElementById('pronunciation-detail');
-   
+
 
     const imgElement = document.getElementById('image');
     const imgTitle = document.getElementById('image-title');
     const imgDetail = document.getElementById('image-detail');
 
     const nextButton = document.getElementById('next-btn');
+    const checkBox = document.getElementById('checkbox-container');
+    const inputCheckBox = document.getElementById('myCheckbox');
 
 
     const starCountRef = ref(database, `/${topic}`);
     var wordDefinitions = [];
+    var hiddenWords = [];
     var isChecked = false;
-    var updatedWords = [];
+    var updatedRank = [];
+    var isHidden = false;
 
     onValue(starCountRef, (snapshot) => {
       wordDefinitions = snapshot.val();
-      wordDefinitions = shuffle(wordDefinitions);
-      updatedWords = wordDefinitions;
+      const filteredArr = filterArray(wordDefinitions);
+      wordDefinitions = filteredArr[0];
+      hiddenWords = filteredArr[1];
+      updatedRank = wordDefinitions.slice();
       displayDefinition();
+    }, {
+      onlyOnce: true
     });
     let currentWordIndex = 0;
 
@@ -209,6 +262,8 @@
       imgElement.style.display = 'none';
       imgDetail.style.display = 'none';
       nextButton.style.display = 'none';
+      checkBox.style.display = 'none';
+      inputCheckBox.checked = false;
       var inputElement = document.getElementById('user-input');
       inputElement.focus();
     }
@@ -221,7 +276,7 @@
         currentWordIndex++;
       }
       const word = wordDefinitions[currentWordIndex];
-      
+
       definitionElement.innerHTML = "";
       if (word.type) {
         definitionElement.innerHTML += `(${word.type}) `;
@@ -235,6 +290,10 @@
         imgElement.style.display = 'block';
         imgDetail.style.display = 'block';
         imgDetail.src = word.image;
+      }
+      console.log(word)
+      if (word.rank === 0) {
+        checkBox.style.display = 'block';
       }
     }
 
@@ -252,25 +311,21 @@
         const inputAnswer = answerInput.value.toLowerCase().trim();
 
         if (inputAnswer === correctAnswer) {
-          if (wordObj.pronunciation){
+          if (wordObj.pronunciation) {
             animationElement.innerHTML = `<span class='correct-animation'>${wordObj.pronunciation}</span> is correct!`;
           } else {
             animationElement.innerHTML = `<span class='correct-animation'>Correct!</span>`;
           }
           // desc rank when it's correct
-          if (updatedWords[currentWordIndex].rank && updatedWords[currentWordIndex].rank > 0) {
-            updatedWords[currentWordIndex].rank -= 1;
-          } else {
-            updatedWords[currentWordIndex].rank = 0;
+          if (updatedRank.length > currentWordIndex && updatedRank[currentWordIndex].rank > 0) {
+            updatedRank[currentWordIndex].rank -= 1;
           }
         } else {
           wordDefinitions.push(wordObj);
           animationElement.innerHTML = `"<span class='incorrect-animation'>${correctAnswer}</span>" is the correct word.`;
           // count rank when it's wrong
-          if (updatedWords[currentWordIndex].rank) {
-            updatedWords[currentWordIndex].rank += 1;
-          } else {
-            updatedWords[currentWordIndex].rank = 1;
+          if (updatedRank.length > currentWordIndex) {
+            updatedRank[currentWordIndex].rank += 1;
           }
         }
         animationElement.hidden = false;
@@ -295,10 +350,39 @@
         if (currentWordIndex < wordDefinitions.length) {
           displayDefinition();
         } else {
-          // All questions answered, show completion message or redirect to another page
-          alert("Congratulations! You have completed all the questions.");
-          window.location.href = `Options.html?topic=${topic}`;
+          const newArray = updatedRank.concat(hiddenWords);
+          saveData(newArray);
         }
+      }
+    }
+
+    function saveData(words) {
+      const animationElement = document.getElementById("animation");
+      try {
+        var jsonData = {};
+        jsonData[topic] = words;
+        update(ref(database, `/`), jsonData)
+          .then(() => {
+            alert("Congratulations! You have completed all the questions.");
+            window.location.href = `Options.html?topic=${topic}`;
+          })
+          .catch((error) => {
+            animationElement.innerHTML = `<span class='incorrect-animation'>Can not save JSON!</span>`;
+            animationElement.hidden = false;
+          });
+      } catch (error) {
+        animationElement.innerHTML = `<span class='incorrect-animation'>Invalid JSON input!</span>`;
+        animationElement.hidden = false;
+      }
+    }
+
+    document.handleCheckboxClick = function handleCheckboxClick() {
+      if (isHidden) {
+        isHidden = false;
+        updatedRank[currentWordIndex].rank = 0;
+      } else {
+        isHidden = true;
+        updatedRank[currentWordIndex].rank = -1;
       }
     }
 
@@ -310,32 +394,33 @@
         checkAnswer();
       }
     });
-    
-  window.openPronun = function openPronun() {
-    if (pronunciationDetail.style.display === 'none') {
-      pronunciationDetail.style.display = 'block';
-    } else {
-      pronunciationDetail.style.display = 'none';
-    }
-    var inputElement = document.getElementById('user-input');
-    inputElement.focus();
-  }
 
-  window.openImage = function openImage() {
-    if (imgDetail.style.display === 'none') {
-      imgDetail.style.display = 'block';
-    } else {
-      imgDetail.style.display = 'none';
+    window.openPronun = function openPronun() {
+      if (pronunciationDetail.style.display === 'none') {
+        pronunciationDetail.style.display = 'block';
+      } else {
+        pronunciationDetail.style.display = 'none';
+      }
+      var inputElement = document.getElementById('user-input');
+      inputElement.focus();
     }
-    var inputElement = document.getElementById('user-input');
-    inputElement.focus();
-  }
 
-  document.addEventListener('keydown', function(event) {
+    window.openImage = function openImage() {
+      if (imgDetail.style.display === 'none') {
+        imgDetail.style.display = 'block';
+      } else {
+        imgDetail.style.display = 'none';
+      }
+      var inputElement = document.getElementById('user-input');
+      inputElement.focus();
+    }
+
+    document.addEventListener('keydown', function (event) {
       if (event.keyCode === 16) {
         nextQuestion();
       }
     });
+
   </script>
 </body>
 
