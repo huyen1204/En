@@ -69,6 +69,23 @@ function convert(words) {
       array[currentIndex] = array[randomIndex];
       array[randomIndex] = temporaryValue;
     }
-  
-    return array;
+    
+    return array.sort((a, b) => b.rank - a.rank);;
+  }
+
+  function filterArray(words) {
+    let learningWords = [];
+    let hiddenWords = [];
+    for (let i = 0; i < words.length; i++) {
+      let word = words[i];
+      if (word.rank === undefined) {
+        word.rank = 0;
+      }
+      if (word.rank >= 0) {
+        learningWords.push(word);
+      } else {
+        hiddenWords.push(word);
+      }
+    }
+    return [shuffleArray(learningWords), hiddenWords]
   }
