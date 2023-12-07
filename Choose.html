@@ -134,7 +134,8 @@
     var words = [];
     onValue(starCountRef, (snapshot) => {
       var dbwords = snapshot.val();
-      dbwords = shuffle(dbwords);
+      const filteredArr = filterArray(dbwords);
+      dbwords = filteredArr[0];
       words = convert(dbwords);
       displayQuestion();
     });
