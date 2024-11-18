@@ -98,9 +98,7 @@
     const starCountRef = ref(database, `/${topic}`);
     var flashcards = [];
     onValue(starCountRef, (snapshot) => {
-      flashcards = snapshot.val();
-      const filteredArr = filterArray(flashcards);
-      flashcards = filteredArr[0];
+      flashcards = snapshot.val();      
       updateFlashcard();
     });
     const flashcard = document.querySelector('.flashcard');
